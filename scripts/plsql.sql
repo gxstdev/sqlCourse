@@ -94,5 +94,24 @@ END;
 
 
 
+SELECT * FROM TB_GERENTE tg;
 
+DECLARE 
+--criando tipos de dados personalizados
+--estrutura para criar um tipo -> TYPE nometipo IS RECORD()
+TYPE TGerente IS RECORD(
+	codigo_gerente int,
+	nome_gerente varchar2(50)	
+);
+--declarando uma variável do tipo que criamos -> TGerente
+v_gerente TGerente;
+BEGIN 
+	SELECT tg.CD_GERENTE, INITCAP(LOWER(tg.NM_GERENTE))
+	INTO v_gerente.codigo_gerente, v_gerente.nome_gerente
+	FROM TB_GERENTE tg
+	WHERE tg.CD_GERENTE = 1; 
+DBMS_OUTPUT.PUT_LINE('cd: ' || v_gerente.codigo_gerente || chr(10));
+DBMS_OUTPUT.PUT_LINE('nm: ' || v_gerente.nome_gerente);
+END;	
+	
 

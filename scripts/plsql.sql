@@ -92,10 +92,6 @@ WHEN no_data_found THEN
 DBMS_OUTPUT.PUT_LINE('código nf inexistente');
 END;
 
-
-
-SELECT * FROM TB_GERENTE tg;
-
 DECLARE 
 --criando tipos de dados personalizados
 --estrutura para criar um tipo -> TYPE nometipo IS RECORD()
@@ -114,4 +110,30 @@ DBMS_OUTPUT.PUT_LINE('cd: ' || v_gerente.codigo_gerente || chr(10));
 DBMS_OUTPUT.PUT_LINE('nm: ' || v_gerente.nome_gerente);
 END;	
 	
+--escopo -> podemos aninhar blocos
+--blocos são definidos por DECLARE BEGIN END
+<<blocoprincipal>>
+DECLARE 
+vNome VARCHAR2(50);
+BEGIN
+	vNome := 'Gabriela';
+	<<blocointerno>>
+	DECLARE
+	vNome VARCHAR2(50);
+	BEGIN
+		vNome := 'Teste';
+		DBMS_OUTPUT.PUT_LINE('valor para vNome - bloco principal: ' ||  blocoprincipal.VNome);
+		DBMS_OUTPUT.PUT_LINE('valor para vNome - bloco interno: ' ||  blocointerno.VNome);
+		<<blocomaisinternoainda>>
+		DECLARE 
+		vNome VARCHAR2(50);
+		BEGIN 
+		vNome := 'ChatGPT';	
+		DBMS_OUTPUT.PUT_LINE(chr(10) || 'não é com ' || vNome);
+		DBMS_OUTPUT.PUT_LINE(chr(10) || 'a label serve como o this em java ' || blocointerno.vNome);
+		END;		
+	END;
+DBMS_OUTPUT.PUT_LINE(chr(10) || vNome);
+END;	
+
 

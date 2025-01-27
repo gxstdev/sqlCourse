@@ -136,4 +136,75 @@ BEGIN
 DBMS_OUTPUT.PUT_LINE(chr(10) || vNome);
 END;	
 
+--controle de fluxo / IF ELSE
+DECLARE 
+v_num NUMBER(12,0);
+BEGIN
+	v_num := 21;
+	IF MOD(v_num, 2) <> 0
+	THEN 
+	DBMS_OUTPUT.PUT_LINE('o número ' || v_num || ' é impar');
+	ELSE
+	DBMS_OUTPUT.PUT_LINE('o número ' || v_num || ' é par');
+	END IF;
+END;
+
+
+DECLARE 
+v_num1 NUMBER(12,0);
+v_num2 NUMBER(12,0);
+v_num3 NUMBER(12,0);
+BEGIN
+	v_num1 := 15;
+	v_num2 := 3;
+	v_num3 := 11;
+	IF v_num1 < v_num2 AND v_num1 < v_num3 
+	THEN 
+	DBMS_OUTPUT.PUT_LINE('o menor é ' || v_num1);
+	ELSIF v_num2 < v_num1 AND v_num2 < v_num3
+	THEN 
+	DBMS_OUTPUT.PUT_LINE('o menor é ' || v_num2);
+	ELSE 
+	DBMS_OUTPUT.PUT_LINE('o menor é ' || v_num3);	
+	END IF;
+END;
+
+
+DECLARE 
+v_num1 NUMBER(12,0);
+v_num2 NUMBER(12,0);
+v_num3 NUMBER(12,0);
+BEGIN
+	v_num1 := 15;
+	v_num2 := 3;
+	v_num3 := 11;
+	CASE WHEN v_num1 < v_num2 AND v_num1 < v_num3 
+	THEN 
+	DBMS_OUTPUT.PUT_LINE('o menor é ' || v_num1);
+	WHEN v_num2 < v_num1 AND v_num2 < v_num3
+	THEN 
+	DBMS_OUTPUT.PUT_LINE('o menor é ' || v_num2);
+	ELSE 
+	DBMS_OUTPUT.PUT_LINE('o menor é ' || v_num3);	
+	END CASE;
+END;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

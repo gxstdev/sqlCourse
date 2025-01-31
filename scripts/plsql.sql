@@ -190,7 +190,56 @@ BEGIN
 END;
 
 
+--GOTO
+DECLARE
+    v_contador NUMBER := 1;
+BEGIN
+    <<inicio>>
+    DBMS_OUTPUT.PUT_LINE('Valor de v_contador: ' || v_contador);
+    
+    v_contador := v_contador + 1;
+    
+    --loop infinito 
+	--<<fim>>
+	--DBMS_OUTPUT.PUT_LINE('Valor de v_contador: ' || v_contador);
+    
+	IF v_contador <= 5 THEN
+        GOTO inicio; -- Pula para o rótulo 'inicio'
+    ELSE 
+	    IF v_contador > 5  THEN
+	    	GOTO fim;
+	    END IF;
+    END IF;
+	<<fim>>
+	DBMS_OUTPUT.PUT_LINE('Valor de v_contador: ' || v_contador);
+    DBMS_OUTPUT.PUT_LINE('Fim do loop.');
+END;
 
+DECLARE 
+	v_qtd_cal NUMBER(12, 2) DEFAULT 0;
+	v_num_row NUMBER(12, 0) DEFAULT 1;
+	v_limite_id NUMBER(12, 0) DEFAULT 1;
+BEGIN 
+	SELECT COUNT(tcr.ID) 
+	INTO v_limite_id
+	FROM TB_CALORIES_RECORD tcr;
+
+	<<s1>>
+	SELECT tcr.QT_CALORIES 
+	INTO v_qtd_cal
+	FROM TB_CALORIES_RECORD tcr 
+	WHERE tcr.ID = v_num_row;
+
+	DBMS_OUTPUT.PUT_LINE('id: ' || v_num_row || ' cal: ' || v_qtd_cal);
+	
+	v_num_row := v_num_row + 1;
+	
+	IF v_limite_id <= v_num_row
+	THEN GOTO s1;	
+	END IF;
+	
+	DBMS_OUTPUT.PUT_LINE('fim');
+END;
 
 
 

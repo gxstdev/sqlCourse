@@ -234,26 +234,98 @@ BEGIN
 	
 	v_num_row := v_num_row + 1;
 	
-	IF v_limite_id <= v_num_row
+	IF v_limite_id >= v_num_row
 	THEN GOTO s1;	
 	END IF;
 	
 	DBMS_OUTPUT.PUT_LINE('fim');
 END;
 
+--FOR
+DECLARE
+BEGIN
+	FOR i IN 0..10 LOOP
+		INSERT INTO TB_CALORIES_RECORD(ID, DT_RECORD, QT_CALORIES)
+		VALUES(tcr_sequence.nextval, TRUNC(SYSDATE) - i, 1850 - i);		
+	END LOOP;	
+END;
 
+DECLARE
+v_limite NUMBER(12, 0) DEFAULT 0;
+BEGIN
+	SELECT COUNT(tcr.ID) 
+	INTO v_limite
+	FROM TB_CALORIES_RECORD tcr;
 
+	FOR i IN 1..v_limite LOOP
+		UPDATE TB_CALORIES_RECORD tcr
+		SET tcr.QT_CALORIES = 1650
+		WHERE tcr.DT_RECORD = TO_DATE('31/01/2025', 'dd/mm/yyyy');
+	END LOOP;	
+END;
 
+--WHILE
+DECLARE 
+TYPE TNf IS RECORD(
+	codigo NUMBER(38,0),
+	valor NUMBER(12,2)
+);
 
+v_num_row NUMBER(12,0);
+v_limite_id NUMBER(12,0);
+v_nf TNf;
+BEGIN
+	v_num_row := 1;
 
+	SELECT COUNT(tni.CD_NF) 
+	INTO v_limite_id
+	FROM TB_NF_ITEM tni;
+	
+	<<wloop>>
+	WHILE v_num_row <= v_limite_id
+	LOOP
+		EXIT WHEN v_num_row = 22;
+	
+		SELECT tni.CD_NF, nvl(tni.VL_PRODUCT, 0) 
+		INTO v_nf.codigo, v_nf.valor
+		FROM TB_NF_ITEM tni WHERE tni.CD_NF = v_num_row; 
+	
+		v_num_row := v_num_row + 1;
+	
+		CASE 
+			WHEN v_nf.valor <= 500 	THEN CONTINUE wloop;
+			ELSE DBMS_OUTPUT.PUT_LINE('código: ' || v_nf.codigo || ' valor: ' || v_nf.valor);
+		END CASE;		
+	END LOOP;
+	
+	DBMS_OUTPUT.PUT_LINE(v_num_row);	
+END;
 
-
-
-
-
-
-
-
-
-
-
+--LOOP
+DECLARE 
+v_cal NUMBER(12,2) DEFAULT 0;
+v_limite_id NUMBER(12,0) DEFAULT 1;
+v_num_row NUMBER(12,0) DEFAULT 0;
+BEGIN 	
+	SELECT COUNT(tcr.ID) 
+	INTO v_limite_id
+	FROM TB_CALORIES_RECORD tcr;
+	DBMS_OUTPUT.PUT_LINE('limite: ' || v_limite_id);
+	LOOP
+		v_num_row := v_num_row + 1;
+		EXIT WHEN v_num_row > v_limite_id;
+	
+		SELECT tcr.QT_CALORIES 
+		INTO v_cal
+		FROM TB_CALORIES_RECORD tcr
+		WHERE tcr.ID = v_num_row;
+		
+		IF v_cal > 2500 
+		THEN DBMS_OUTPUT.PUT_LINE('cal excedida: ' || v_cal);
+		END IF;
+		
+		CONTINUE WHEN v_cal > 1900;
+		DBMS_OUTPUT.PUT_LINE('cals: ' || v_cal);
+	
+	END LOOP;	
+END;

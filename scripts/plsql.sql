@@ -329,3 +329,54 @@ BEGIN
 	
 	END LOOP;	
 END;
+
+--exception não definidas pela oracle
+--tratamos elas com o operador OTHER
+DECLARE
+  v_code NUMBER;
+  v_errm VARCHAR2(200);
+BEGIN
+  -- simulando um erro de divisão por zero
+  DECLARE
+    v_num NUMBER := 1;
+  BEGIN
+    v_num := v_num / 0;
+  EXCEPTION
+    WHEN OTHERS THEN
+      v_code := SQLCODE;
+      v_errm := SQLERRM;
+      DBMS_OUTPUT.PUT_LINE('Erro ' || v_code || ': ' || v_errm);
+  END;
+END;
+
+--para pegar exceptions dentro de um loop, precisamos add
+--esse loop a um bloco begin..end
+DECLARE
+  v_result NUMBER;
+BEGIN
+  FOR i IN 1..5 LOOP
+	  
+    BEGIN  
+      IF i = 3 THEN
+        v_result := 1 / 0; 
+      ELSE
+        DBMS_OUTPUT.PUT_LINE('Iteração ' || i || ' concluída.');
+      END IF;
+    EXCEPTION
+      WHEN OTHERS THEN
+        DBMS_OUTPUT.PUT_LINE('Erro na iteração ' || i || ': ' || SQLERRM);
+    END;
+  END LOOP;
+END;
+
+DECLARE 
+v_exc1 EXCEPTION;
+BEGIN
+	IF trunc(SYSDATE - 1) = TO_DATE('01/02/2025', 'dd/mm/yyyy') 
+	THEN RAISE v_exc1;
+	END IF;
+
+	EXCEPTION
+	WHEN v_exc1 THEN 
+	dbms_output.put_line('exception lançada: '||SQLERRM);
+END;

@@ -30,7 +30,26 @@ BEGIN
 	RETURN initcap(v_nome_invertido);
 END invertenome;
 
+
 SELECT invertenome('gabriela') FROM dual;
+
+CREATE OR REPLACE 
+FUNCTION fninvertenomeconcat
+	(nome IN VARCHAR2)
+	RETURN VARCHAR2
+IS
+v_tamanho_nome NUMBER(12,0);
+v_nome_invertido VARCHAR2(50);
+BEGIN 
+	v_nome_invertido := '';
+	v_tamanho_nome := LENGTH(nome);
+	FOR i IN REVERSE 1..v_tamanho_nome LOOP
+	v_nome_invertido := concat(v_nome_invertido, substr(nome, i, 1));
+	END LOOP;
+	RETURN initcap(v_nome_invertido);
+END fninvertenomeconcat;
+
+SELECT fninvertenomeconcat('mariana') FROM dual;
 
 --function sem parâmetros
 CREATE OR REPLACE 
@@ -82,3 +101,29 @@ SELECT
 	fnqtdexcedida(tcr.QT_CALORIES, 1650) QT_EXCEDIDA
 FROM
 	TB_CALORIES_RECORD tcr ;
+
+--parametro OUT
+CREATE OR REPLACE 
+FUNCTION fn_obter_id_nf(valor IN NUMBER, id OUT NUMBER )
+RETURN NUMBER
+IS 
+retorno_func NUMBER(12, 0);
+BEGIN 
+	SELECT ID_NF 
+	INTO id 
+	FROM tb_nf WHERE ID_NF = valor;
+	
+	retorno_func := id;
+	RETURN retorno_func;
+END fn_obter_id_nf;
+
+DECLARE 
+v_retorno_func NUMBER(12, 0) DEFAULT 0;
+v_retorno_param_out NUMBER(12, 0) DEFAULT 0;
+BEGIN
+	v_retorno_func := fn_obter_id_nf(1, v_retorno_param_out);
+
+	DBMS_OUTPUT.PUT_LINE('retorno func: ' || v_retorno_func);
+	DBMS_OUTPUT.PUT_LINE('retorno func: ' || v_retorno_param_out);
+END;
+

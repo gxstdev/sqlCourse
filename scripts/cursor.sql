@@ -29,14 +29,16 @@ BEGIN
 			
 		FETCH c_tb_nf INTO v_id_nf, v_dt, v_nr_item;
 		CASE WHEN v_nr_item > 28 
+		THEN 
 		RAISE qtd_item_invalida;
-		
+		ELSE 			
 		dbms_output.put_line(v_id_nf || v_dt || v_nr_item);	
-		
+		END CASE; 
+	
 		EXCEPTION 
 		WHEN qtd_item_invalida THEN 
 		dbms_output.put_line('quantidade de item inválida.');
 		END;
-	END LOOP
+	END LOOP;
 	CLOSE c_tb_nf;
-END
+END;

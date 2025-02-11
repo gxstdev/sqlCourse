@@ -42,3 +42,13 @@ BEGIN
 	END LOOP;
 	CLOSE c_tb_nf;
 END;
+
+DECLARE
+   CURSOR c_calories(p_qtd NUMBER) IS 
+      SELECT tcr.ID, tcr.QT_CALORIES FROM TB_CALORIES_RECORD tcr
+	  WHERE tcr.QT_CALORIES <= p_qtd;
+BEGIN
+   FOR r_retorno_row IN c_calories(1900) LOOP
+      DBMS_OUTPUT.PUT_LINE('ID: ' || r_retorno_row.id || ' - QT: ' || r_retorno_row.QT_CALORIES);
+   END LOOP;
+END;
